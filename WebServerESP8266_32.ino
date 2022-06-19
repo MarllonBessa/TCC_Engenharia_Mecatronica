@@ -2,8 +2,8 @@
 
 #include <ESP8266WiFi.h>
  
-const char* ssid = "M bessa oi fibra 2.4";//DIGITE A REDE 
-const char* password = "titan125";//ENTRE COM A SENHA
+const char* ssid = "REDE DE SENSORES";//DIGITE A REDE 
+const char* password = "TCC20221";//ENTRE COM A SENHA
 
 //const char* ssid = "AndroidAP";//type your ssid
 //const char* password = "alan2580";//type your password
