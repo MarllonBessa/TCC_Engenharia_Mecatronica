@@ -85,22 +85,7 @@ int aguardaRead() {
         chegando = chegando + cc;
       }
     }
-    //if (chegando.length() == 10) {
-      // tamanho ok
-    //}      
-    //Serial.print("T");
-    //int taman = chegando.length();
-    //Serial.println( taman );
-    //lcd.clear();
-    //DEFINE INICIO DO TEXTO
-    //lcd.setCursor(0,0);
-    //ESCREVA 
-    //lcd.print("Slave 0");
-    //DEFINE INICIO DO TEXTO SEGUNDA LINHA
-    //lcd.setCursor(2,1);
-    //lcd.print( chegando );
     Serial.println(chegando);
-
     // volta ao modo escrita
     digitalWrite(pinWrRd, writeOp );
     delay(1);
