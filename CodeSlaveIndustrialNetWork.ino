@@ -35,15 +35,14 @@ void setup()
     
   mySerial.begin( 9600 );
   Serial.begin( 9600 );
-  pinMode(12 , INPUT_PULLUP );
-  pinMode(11 , INPUT_PULLUP );
+  pinMode(12 , INPUT_PULLUP );      //Pinos de endereçamento dos escravos
+  pinMode(11 , INPUT_PULLUP );      //Pinos de endereçamento dos escravos
   
   EnerMonitor.current(InputSCT, I_calibration);   // configura pino SCT e fator de calibração
 
   int valIn1 = digitalRead( 12 );
   int valIn2 = digitalRead( 11 );
-  myAdd = valIn1*2 + valIn2 ; 
-  myAdd=1;
+  myAdd = valIn1*2 + valIn2 ; //Calculando o endereço dos escravos
 
   Serial.print("ADD " );
   Serial.println( myAdd );
@@ -149,24 +148,18 @@ void transmiteComCS( String mensagem ) {
 
 void runRead() {
 
-  //int leitura = analogRead( A0 );
-  Irms = EnerMonitor.calcIrms(1480);         // calculo da corrente RMS                 
+  Irms = EnerMonitor.calcIrms(1480);         // calculo da corrente RMS
+  Irms = 1.0002*Irms - 0.2856;              //Função de calibração do sensor SCT013 com base nos dados obtidos em bancada.
   int leitura=Irms*100;
   int tensao = Vrede;
-  //int leitura = analogRead( A0 );
-  //byte valLo = leitura % 256;
-  //byte valHi = leitura - valLo;
   
-  digitalWrite(pinWrRd, writeOp );
+  digitalWrite(pinWrRd, writeOp );        //Habilita a escrita
   delay(1);
-// AD 10 bits 11.12345678
   
-  //pacote = datagrama( 0 , 0 , valHi , valLo );
-  //transmiteComCS( pacote );
   mySerial.print("000");   
   mySerial.print(myAdd);
 
-  if (tensao < 1000) {
+  if (tensao < 1000) {                  //Transferindo o pacote sempre com 4Bytes de tamanho
     mySerial.print("0");
   }
   if (tensao < 100) {
@@ -177,7 +170,7 @@ void runRead() {
   }
   mySerial.print(tensao);
 
-  if (leitura < 1000) {
+  if (leitura < 1000) {         //Transferindo o pacote sempre com 4Bytes de tamanho
     mySerial.print("0");
   }
   if (leitura < 100) {
@@ -199,7 +192,7 @@ void loop()
 {
 
   
-  while (mySerial.available() > 0) {
+  while (mySerial.available() > 0) { //Aguardando a comunicação na rede industrial
     char cIn = mySerial.read();
     delay(1);
     Serial.write( cIn );
@@ -213,8 +206,8 @@ void loop()
     tOcioso = millis()-lastRec;
     if (tOcioso > 15) {
       stRec=0;
-      if (confereCS()) { 
-        Serial.println("!");
+      if (confereCS()) {         //Conferindo a informação recebida;
+        Serial.println("!"); 
 
         Serial.print(">");
         Serial.println(pacote);
@@ -223,7 +216,7 @@ void loop()
         int io = ordChar(pacote.charAt(4))*16 + ordChar(pacote.charAt(5)) - 48;
         int valor = ordChar(pacote.charAt(6))*16 + ordChar(pacote.charAt(7)) - 48;
         
-        Serial.print(">> ");
+        Serial.print(">> ");   //Executando os comandos solicitados
         Serial.print( endereco ); Serial.print(" ");
         Serial.print( comando ); Serial.print(" ");
         Serial.print( io ); Serial.print(" ");
